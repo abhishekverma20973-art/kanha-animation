@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#05050d" />
+    <meta
+      name="description"
+      content="An interactive neon-particle Kanha reveal for Krishna Janmashtmi."
+    />
+    <title>Kanha — Devotion Meets Code</title>
+    <link rel="icon" href="assets/kanha.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="aurora aurora--one" aria-hidden="true"></div>
+    <div class="aurora aurora--two" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <main class="experience">
+      <header class="hero">
+        <p class="hero__kicker">A devotional code experience</p>
+        <h1 class="hero__title">
+          <span>When devotion</span>
+          <span>meets code.</span>
+        </h1>
+        <p class="hero__festival">Happy Krishna Janmashtmi</p>
+
+        <div class="devotional-icons" aria-hidden="true">
+          <svg class="feather" viewBox="0 0 74 92">
+            <path d="M31 86C37 59 41 32 54 7" />
+            <path d="M52 8C26 10 10 33 18 54c8 20 29 16 37 1 9-17 6-35-3-47Z" />
+            <ellipse cx="39" cy="36" rx="14" ry="18" />
+            <ellipse cx="39" cy="36" rx="7" ry="10" />
+          </svg>
+          <span class="icon-divider"></span>
+          <svg class="flute" viewBox="0 0 112 50">
+            <path d="M9 41 96 7" />
+            <path d="m92 8 9 7" />
+            <circle cx="33" cy="32" r="3" />
+            <circle cx="50" cy="25" r="3" />
+            <circle cx="67" cy="19" r="3" />
+            <circle cx="84" cy="12" r="3" />
+          </svg>
+        </div>
+      </header>
+
+      <section class="editor" id="editor" aria-label="Interactive Kanha particle animation">
+        <div class="editor__bar">
+          <div class="traffic-lights" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="editor__tab">
+            <span class="js-badge">JS</span>
+            <span>kanha_reveal.js</span>
+          </div>
+          <p class="editor__status" id="status">READY</p>
+        </div>
+
+        <div class="editor__viewport" id="viewport">
+          <div class="code-panel" id="codePanel">
+            <div class="line-numbers" aria-hidden="true">
+              <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              <span>6</span><span>7</span><span>8</span><span>9</span>
+            </div>
+            <pre class="code-wrap"><code id="codeOutput"></code><span class="caret" id="caret"></span></pre>
+
+            <button class="run-button" id="runButton" type="button" aria-label="Run Kanha reveal">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z" /></svg>
+              <span>Run reveal</span>
+            </button>
+          </div>
+
+          <canvas id="particleCanvas" aria-label="Kanha formed by colorful neon particles"></canvas>
+
+          <div class="reveal-copy" id="revealCopy" aria-live="polite">
+            <p class="reveal-copy__eyebrow">Jai Shree Krishna</p>
+            <p class="reveal-copy__line">Radhe <span>•</span> Radhe</p>
+          </div>
+
+          <p class="interaction-hint" id="interactionHint">Move your pointer near the particles • tap to create a blessing wave</p>
+        </div>
+      </section>
+
+      <nav class="controls" aria-label="Animation controls">
+        <button class="control" id="replayButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7v5h5M5.5 16a8 8 0 1 0 .5-9" /></svg>
+          Replay
+        </button>
+        <button class="control" id="burstButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" /></svg>
+          Blessing wave
+        </button>
+        <button class="control" id="fullscreenButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" /></svg>
+          Fullscreen
+        </button>
+      </nav>
+
+      <footer class="footer">
+        <p>Made with <span aria-label="devotion">♥</span>, particles &amp; JavaScript</p>
+        <p class="footer__signature">जय श्री कृष्ण</p>
+      </footer>
+    </main>
+
+    <noscript>This animation needs JavaScript enabled.</noscript>
+  </body>
+</html>
