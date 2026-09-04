@@ -18,6 +18,22 @@
     <div class="aurora aurora--two" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
 
+    <section class="start-gate" id="startGate" aria-labelledby="startTitle" hidden>
+      <div class="start-gate__card">
+        <div class="start-gate__halo" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 18V6l10 6Z" /></svg>
+        </div>
+        <p class="start-gate__kicker">An interactive devotional experience</p>
+        <h2 id="startTitle">Kanha awaits in the code</h2>
+        <p class="start-gate__song">Featuring “Ruk Ja Kanha Tham Ja”</p>
+        <button class="start-gate__primary" id="startButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5l4.5 4Z" /><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11" /></svg>
+          Begin with music
+        </button>
+        <button class="start-gate__secondary" id="silentButton" type="button">Continue silently</button>
+      </div>
+    </section>
+
     <main class="experience">
       <header class="hero">
         <p class="hero__kicker">A devotional code experience</p>
@@ -92,6 +108,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" /></svg>
           Blessing wave
         </button>
+        <button class="control" id="musicButton" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5l4.5 4Z" /><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11" /></svg>
+          <span id="musicLabel">Music off</span>
+        </button>
         <button class="control" id="fullscreenButton" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" /></svg>
           Fullscreen
@@ -103,6 +123,10 @@
         <p class="footer__signature">जय श्री कृष्ण</p>
       </footer>
     </main>
+
+    <audio id="devotionalAudio" preload="auto" autoplay loop>
+      <source src="assets/ruk-ja-kanha.mp3" type="audio/mpeg" />
+    </audio>
 
     <noscript>This animation needs JavaScript enabled.</noscript>
   </body>

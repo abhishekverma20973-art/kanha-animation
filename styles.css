@@ -72,6 +72,146 @@ button {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
 }
 
+.start-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(3, 4, 12, 0.78);
+  backdrop-filter: blur(20px);
+  transition: opacity 650ms ease, visibility 650ms ease;
+}
+
+.start-gate.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.start-gate[hidden] {
+  display: none;
+}
+
+.start-gate__card {
+  position: relative;
+  width: min(100%, 470px);
+  overflow: hidden;
+  padding: 46px 34px 34px;
+  border: 1px solid rgba(137, 153, 220, 0.22);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(114, 69, 255, 0.2), transparent 44%),
+    linear-gradient(155deg, rgba(22, 24, 43, 0.98), rgba(9, 10, 22, 0.98));
+  box-shadow: 0 34px 110px rgba(0, 0, 0, 0.62), 0 0 70px rgba(122, 73, 255, 0.1);
+  text-align: center;
+}
+
+.start-gate__card::before {
+  position: absolute;
+  inset: 0 18% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--pink), transparent);
+  content: "";
+  opacity: 0.8;
+}
+
+.start-gate__halo {
+  display: grid;
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 25px;
+  place-items: center;
+  border: 1px solid rgba(255, 221, 98, 0.42);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 221, 98, 0.22), rgba(255, 77, 218, 0.08) 58%, transparent 60%);
+  box-shadow: 0 0 36px rgba(255, 221, 98, 0.14);
+  animation: readyPulse 2.2s ease-in-out infinite;
+}
+
+.start-gate__halo svg {
+  width: 27px;
+  fill: var(--gold);
+  filter: drop-shadow(0 0 10px rgba(255, 221, 98, 0.4));
+}
+
+.start-gate__kicker {
+  margin: 0 0 12px;
+  color: var(--cyan);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.start-gate h2 {
+  margin: 0;
+  color: #fff3c1;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 7vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.start-gate__song {
+  margin: 17px 0 28px;
+  color: #adb5d0;
+  font-size: 0.88rem;
+}
+
+.start-gate__primary,
+.start-gate__secondary {
+  border: 0;
+  cursor: pointer;
+}
+
+.start-gate__primary {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  color: #120c05;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #ffe27a, #ffb84f);
+  box-shadow: 0 14px 40px rgba(255, 190, 76, 0.22);
+  font-weight: 850;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.start-gate__primary:hover,
+.start-gate__primary:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 46px rgba(255, 190, 76, 0.35);
+}
+
+.start-gate__primary svg {
+  width: 20px;
+  fill: currentColor;
+}
+
+.start-gate__primary svg path:not(:first-child) {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.start-gate__secondary {
+  margin-top: 15px;
+  padding: 5px 10px;
+  color: #8991ac;
+  background: transparent;
+  font-size: 0.77rem;
+}
+
+.start-gate__secondary:hover,
+.start-gate__secondary:focus-visible {
+  color: #d9dded;
+}
+
 .experience {
   position: relative;
   z-index: 2;
@@ -494,6 +634,18 @@ button {
   transform: translateY(-2px);
 }
 
+.control[aria-pressed="true"] {
+  color: var(--gold);
+  border-color: rgba(255, 221, 98, 0.34);
+  background: rgba(58, 48, 27, 0.55);
+}
+
+.control.needs-tap {
+  color: var(--gold);
+  border-color: rgba(255, 221, 98, 0.4);
+  animation: readyPulse 1.8s ease-in-out infinite;
+}
+
 .control svg {
   width: 17px;
   fill: none;
@@ -554,6 +706,11 @@ noscript {
 }
 
 @media (max-width: 680px) {
+  .start-gate__card {
+    padding: 38px 22px 28px;
+    border-radius: 22px;
+  }
+
   .experience {
     padding: 34px 12px 22px;
   }

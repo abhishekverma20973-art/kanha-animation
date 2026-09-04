@@ -10,7 +10,13 @@ const status = document.querySelector("#status");
 const runButton = document.querySelector("#runButton");
 const replayButton = document.querySelector("#replayButton");
 const burstButton = document.querySelector("#burstButton");
+const musicButton = document.querySelector("#musicButton");
+const musicLabel = document.querySelector("#musicLabel");
 const fullscreenButton = document.querySelector("#fullscreenButton");
+const startGate = document.querySelector("#startGate");
+const startButton = document.querySelector("#startButton");
+const silentButton = document.querySelector("#silentButton");
+const devotionalAudio = document.querySelector("#devotionalAudio");
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -43,8 +49,12 @@ let autoRunTimer = 0;
 let revealStartedAt = 0;
 let isRevealing = false;
 let isComplete = false;
+let experienceStarted = false;
+let musicEnabled = false;
+let autoplayBlocked = false;
 let pointer = { x: -1000, y: -1000, active: false };
 let viewportSize = { width: 0, height: 0, dpr: 1 };
+let imageLayout = { x: 0, y: 0, width: 0, height: 0 };
 
 function escapeHtml(value) {
   return value
@@ -81,6 +91,48 @@ function highlight(code) {
 function clearSequenceTimers() {
   window.clearTimeout(typeTimer);
   window.clearTimeout(autoRunTimer);
+}
+
+function updateMusicControl() {
+  musicButton.setAttribute("aria-pressed", String(musicEnabled));
+  musicButton.classList.toggle("needs-tap", autoplayBlocked && !musicEnabled);
+  musicLabel.textContent = musicEnabled ? "Music on" : autoplayBlocked ? "Tap for music" : "Music off";
+}
+
+async function playMusic(restart = false) {
+  try {
+    if (restart) devotionalAudio.currentTime = 0;
+    devotionalAudio.volume = 0.8;
+    await devotionalAudio.play();
+    musicEnabled = true;
+    autoplayBlocked = false;
+    updateMusicControl();
+    return true;
+  } catch {
+    musicEnabled = false;
+    autoplayBlocked = true;
+    updateMusicControl();
+    return false;
+  }
+}
+
+function pauseMusic() {
+  devotionalAudio.pause();
+  musicEnabled = false;
+  autoplayBlocked = false;
+  updateMusicControl();
+}
+
+async function beginExperience(withMusic) {
+  if (experienceStarted) return;
+  experienceStarted = true;
+  startGate.classList.add("is-hidden");
+  window.setTimeout(() => { startGate.hidden = true; }, 700);
+
+  if (withMusic) await playMusic(true);
+  else pauseMusic();
+
+  typeCode();
 }
 
 function typeCode() {
@@ -160,6 +212,7 @@ function buildParticles() {
   const drawHeight = Math.floor(image.naturalHeight * scale);
   const offsetX = Math.floor((width - drawWidth) / 2 - (width > 700 ? 56 : 0));
   const offsetY = Math.floor((height - reservedBottom - drawHeight) / 2);
+  imageLayout = { x: offsetX, y: offsetY, width: drawWidth, height: drawHeight };
 
   offscreen.width = Math.max(1, Math.floor(width));
   offscreen.height = Math.max(1, Math.floor(height));
@@ -347,7 +400,29 @@ function drawParticles(time) {
 
   ctx.globalCompositeOperation = "source-over";
 
-  if (masterProgress >= 0.92) completeReveal();
+  // Let the particles form the silhouette first, then blend in the complete
+  // artwork so the final face, flute and hand remain crisp rather than dotted.
+  const artworkProgress = Math.max(0, Math.min(1, (masterProgress - 0.74) / 0.26));
+  const artworkAlpha = artworkProgress * artworkProgress * (3 - 2 * artworkProgress);
+  if (artworkAlpha > 0 && imageLayout.width > 0) {
+    const { x, y, width: artWidth, height: artHeight } = imageLayout;
+    const finalPulse = masterProgress >= 1 ? 0.965 + Math.sin(time * 0.0022) * 0.035 : 1;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = artworkAlpha * 0.24;
+    ctx.filter = "blur(14px)";
+    ctx.drawImage(image, x, y, artWidth, artHeight);
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = artworkAlpha * finalPulse;
+    ctx.drawImage(image, x, y, artWidth, artHeight);
+    ctx.restore();
+  }
+
+  if (masterProgress >= 0.97) completeReveal();
 }
 
 function animate(time) {
@@ -380,9 +455,27 @@ function setPointer(event) {
   pointer.active = true;
 }
 
+startButton.addEventListener("click", () => beginExperience(true));
+silentButton.addEventListener("click", () => beginExperience(false));
 runButton.addEventListener("click", beginReveal);
-replayButton.addEventListener("click", resetSequence);
+replayButton.addEventListener("click", () => {
+  if (musicEnabled) playMusic(true);
+  resetSequence();
+});
 burstButton.addEventListener("click", () => createBlessingWave());
+musicButton.addEventListener("click", () => {
+  if (musicEnabled) pauseMusic();
+  else playMusic(false);
+});
+
+devotionalAudio.addEventListener("play", () => {
+  musicEnabled = true;
+  updateMusicControl();
+});
+devotionalAudio.addEventListener("pause", () => {
+  musicEnabled = false;
+  updateMusicControl();
+});
 
 canvas.addEventListener("pointermove", setPointer);
 canvas.addEventListener("pointerleave", () => { pointer.active = false; });
@@ -407,7 +500,20 @@ window.addEventListener("resize", resizeCanvas);
 image.addEventListener("load", resizeCanvas, { once: true });
 
 resizeCanvas();
+updateMusicControl();
+experienceStarted = true;
+startGate.hidden = true;
 typeCode();
+playMusic(false);
+
+function unlockAudioOnce() {
+  if (!musicEnabled) playMusic(false);
+  document.removeEventListener("pointerdown", unlockAudioOnce, true);
+  document.removeEventListener("keydown", unlockAudioOnce, true);
+}
+
+document.addEventListener("pointerdown", unlockAudioOnce, true);
+document.addEventListener("keydown", unlockAudioOnce, true);
 animationFrame = requestAnimationFrame(animate);
 
 window.addEventListener("beforeunload", () => {
